@@ -1,11 +1,14 @@
 import { Router } from "express";
-import { singIn, singUp } from "../controllers/acess.controller.js";
+import signUp from "../controllers/acess.controller.js";
+import { validadeSchema } from "../middlewares/validateSchema.js";
+import schemaRegister from "../schema/register.schema.js";
+
 
 
 const acessRouter = Router()
 
-acess.post('/signup',validadeSchema(schemaCustomers),singUp)
-acess.post('/signin',singIn)
+acessRouter.post('/signup',validadeSchema(schemaRegister),signUp)
 
 
-export default customersRouter
+
+export default acessRouter

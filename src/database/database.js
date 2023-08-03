@@ -6,7 +6,7 @@ dotenv.config()
 /*export const db = new pg.Pool({
   user: 'wilkermizael',//'bootcamp_role',
   host:'localhost',
-  database:'boardcamp',
+  database:'shortly',
   password:'153',
   port:5432
 
