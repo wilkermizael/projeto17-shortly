@@ -1,7 +1,8 @@
 import { db } from "../database/database.js";
 import bcrypt from "bcrypt"
+import { v4 as uuid } from "uuid"
 
-export default async function signUp (req, res){
+export  async function register (req, res){
     const { name ,email,password,confirmPassword } = req.body
     const passwordCrypt = bcrypt.hashSync(password,2)
     console.log(passwordCrypt)
@@ -21,3 +22,24 @@ export default async function signUp (req, res){
         res.status(500).send(error.message)
     }
 } 
+
+export async function login (req, res){
+    const {email, password} = req.body
+    const token = uuid()
+    try{
+        //USUARIO E SENHA COINCIDEM?
+        const user = await db.query(`SELECT * FROM register WHERE email= $1`,[email])
+        if(user.rowCount === 0) return res.sendStatus(401)
+        const validateSenha = bcrypt.compareSync( password, user.rows[0].password)
+        console.log(password.length, user.rows[0].password.length, validateSenha )
+        if(!validateSenha) return res.sendStatus(401)
+
+        //ADICIONA O USUARIO NA TABELA DE USUARIOS
+        await db.query(`INSERT INTO users (email, token) VALUES ($1, $2) `,[email,token])
+        res.status(200).send({token:token})
+        
+       
+    }catch(error){
+        res.status(500).send(error.message)
+    }
+}
