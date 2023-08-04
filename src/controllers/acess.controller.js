@@ -25,18 +25,30 @@ export  async function register (req, res){
 
 export async function login (req, res){
     const {email, password} = req.body
-    const token = uuid()
+    const createToken = uuid()
+
     try{
         //USUARIO E SENHA COINCIDEM?
         const user = await db.query(`SELECT * FROM register WHERE email= $1`,[email])
         if(user.rowCount === 0) return res.sendStatus(401)
         const validateSenha = bcrypt.compareSync( password, user.rows[0].password)
-        console.log(password.length, user.rows[0].password.length, validateSenha )
         if(!validateSenha) return res.sendStatus(401)
 
-        //ADICIONA O USUARIO NA TABELA DE USUARIOS
-        await db.query(`INSERT INTO users (email, token) VALUES ($1, $2) `,[email,token])
-        res.status(200).send({token:token})
+        
+        
+        const tokenId = await db.query(`SELECT * FROM users WHERE email= $1`,[email])
+        if(tokenId.rowCount ===0){
+             //ADICIONA O USUARIO NA TABELA DE USUARIOS SE ELE NAO EXISTE AINDA
+            await db.query(`INSERT INTO users (email, token) VALUES ($1, $2) `,[email,createToken])
+            return res.status(200).send({token:createToken})
+            
+        }else{
+           //SE EXISTIR UM USUÁRIO RETORNA O TOKEN DELE
+            return res.status(200).send({token:tokenId.rows[0].token})
+        }
+        
+        
+        
         
        
     }catch(error){

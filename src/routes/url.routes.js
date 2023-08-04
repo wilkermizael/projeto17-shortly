@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { urlShorten } from "../controllers/url.controller.js";
+import { deleteUrl, listUrl, urlShorten } from "../controllers/url.controller.js";
 import { validadeSchema } from "../middlewares/validateSchema.js";
 import schemaUrl from "../schema/url.schema.js";
 
 const urlRouter = Router()
 
 urlRouter.post('/urls/shorten',validadeSchema(schemaUrl), urlShorten)
-
+urlRouter.get('/urls/:id', listUrl)
+urlRouter.delete('/urls/:id', deleteUrl)
 
 
 
