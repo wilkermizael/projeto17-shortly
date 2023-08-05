@@ -36,8 +36,8 @@ export async function login (req, res){
 
         
         
-        const tokenId = await db.query(`SELECT * FROM users WHERE email= $1`,[email])
-        if(tokenId.rowCount ===0){
+        const userId = await db.query(`SELECT * FROM users WHERE email= $1`,[email])
+        if(userId.rowCount ===0){
              //ADICIONA O USUARIO NA TABELA DE USUARIOS SE ELE NAO EXISTE AINDA
             await db.query(`INSERT INTO users (email, token) VALUES ($1, $2) `,[email,createToken])
             return res.status(200).send({token:createToken})
