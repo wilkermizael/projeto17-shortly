@@ -46,9 +46,9 @@ export async function listUrl(req, res){
         res.status(500).send(error.message)
     }
 }
-export async function deleteUrl(req, res){
-    
+export async function urlRedirect(req, res){
     const {shortUrl} = req.params
+    
     try {
         
         return res.sendStatus(204)
