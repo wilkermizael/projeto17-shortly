@@ -46,6 +46,16 @@ export async function listUrl(req, res){
         res.status(500).send(error.message)
     }
 }
+export async function deleteUrl(req, res){
+    
+    const {shortUrl} = req.params
+    try {
+        
+        return res.sendStatus(204)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
 
 export async function deleteUrl(req, res){
     const {authorization} = req.headers
