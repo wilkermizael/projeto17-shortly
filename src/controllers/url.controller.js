@@ -50,8 +50,13 @@ export async function urlRedirect(req, res){
     const {shortUrl} = req.params
     
     try {
+        //CASO A URL ENCURTADA NÃO EXISTA
+        const url = await db.query(`SELECT * FROM urlShort WHERE "shortUrl"=$1`,[shortUrl]);
+        if(url.rowCount === 0) return res.sendStatus(404)
         
-        return res.sendStatus(204)
+        //ADICIONA URL ENCURTADA NA TABELA RESPECTIVA
+        //await db.query(`INSERT INTO contUrl (urls, "shortId", "cont") VALUES ($1, $2,$3);`,[shortUrl, url.rows[0].userId, 1])
+        return res.redirect(url.rows[0].url)
     } catch (error) {
         res.status(500).send(error.message)
     }
