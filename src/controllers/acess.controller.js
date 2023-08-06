@@ -44,7 +44,7 @@ export async function login (req, res){
             
         }else{
            //SE EXISTIR UM USUÁRIO RETORNA O TOKEN DELE
-            return res.status(200).send({token:tokenId.rows[0].token})
+            return res.status(200).send({token:userId.rows[0].token})
         }
         
         
