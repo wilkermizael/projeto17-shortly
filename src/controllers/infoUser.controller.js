@@ -33,8 +33,15 @@ export  async function listUsers (req, res){
 
 export async function ranking( req,res){
     try{
-       
-        res.status(200).send(array)
+        const ranking = await db.query(`
+        SELECT register.id, register.name, SUM(u."visitCount") as "VisitCount", COUNT(u."userId") as linksCount
+        FROM register
+        LEFT JOIN urlshort u ON register.id = u."userId"
+        GROUP BY register.id, register.name
+        ORDER BY linksCount DESC
+        LIMIT 10;
+    `);
+        res.status(200).send(ranking.rows)
        
     }catch(error){
         res.status(500).send(error.message)
