@@ -21,7 +21,6 @@ export  async function urlShorten (req, res){
         
         delete dataSend.rows[0].userId
         delete dataSend.rows[0].visitCount
-        delete dataSend.rows[0].activ
         delete dataSend.rows[0].createdAt
        
         res.status(201).send(dataSend.rows[0])
