@@ -59,7 +59,7 @@ export async function urlRedirect(req, res){
         const findUrl = await db.query(`SELECT * FROM urlShort WHERE "shortUrl" =$1`,[shortUrl])
         
         if(findUrl.rowCount !== 0){
-            console.log(findUrl.rows[0])
+            
             await db.query(`UPDATE urlShort SET "visitCount" = $1 WHERE "shortUrl"=$2;`,[findUrl.rows[0].visitCount + 1, shortUrl])
             return res.redirect(url.rows[0].url)
         }

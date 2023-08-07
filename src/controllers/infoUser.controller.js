@@ -37,8 +37,8 @@ export async function ranking( req,res){
         SELECT register.id, register.name, SUM(u."visitCount") as "visitCount", COUNT(u."userId") AS "linksCount"
         FROM register
         LEFT JOIN urlshort u ON register.id = u."userId"
-        GROUP BY register.id, register.name , linksCount
-        ORDER BY linksCount DESC
+        GROUP BY register.id, register.name
+        ORDER BY "linksCount" DESC
         LIMIT 10;
     `);
         res.status(200).send(ranking.rows)
