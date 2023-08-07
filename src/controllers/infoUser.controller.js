@@ -8,12 +8,11 @@ export  async function listUsers (req, res){
         if(id.rowCount === 0) return res.sendStatus(401)
         
         //INFORMAÇÕES DO USUARIO
-        const infoUser = await db.query(`SELECT register.id, register.name,
-        SUM(c."cont") AS "visitCount"
-        FROM conturl c
-        JOIN register ON register.id = "shortId"
-        WHERE "shortId" = $1
-        GROUP BY c."shortId", register.name, register.id;`,[id.rows[0].id])
+        const infoUser = await db.query(`SELECT register.id, register.name,  SUM(u."visitCount") as "VisitCount" 
+        FROM urlshort u 
+        JOIN register ON register.id = "userId"
+        WHERE u."userId" = $1
+        GROUP BY u."userId", register.name, register.id;`,[id.rows[0].id])
 
         //INFORMAÇÕES DAS URLS
         const infoUrl = await db.query(`SELECT u."id", u."shortUrl",  u."url", SUM(u."visitCount")  AS "visitCount"
@@ -31,3 +30,13 @@ export  async function listUsers (req, res){
         res.status(500).send(error.message)
     }
 } 
+
+export async function ranking( req,res){
+    try{
+       
+        res.status(200).send(array)
+       
+    }catch(error){
+        res.status(500).send(error.message)
+    }
+}
