@@ -1,0 +1,63 @@
+drop table contUrl;
+
+create table register(
+	"id" SERIAL primary key,
+	"name" text not null,
+	"email" text not null unique,
+	"password" text not null,
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
+	
+);
+create table users(
+	"id" SERIAL primary key,
+	"email" text not null,
+	"token" text not null unique,
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
+	
+	
+);
+
+
+create  table urlShort(
+
+
+	"id" SERIAL primary key,
+	"shortUrl" text not null unique,
+	"url" text not null,
+	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+	"visitCount" integer default 0,
+	"activ" BOOLEAN default true
+);
+
+
+select * from register r ;
+select * from users u  ;
+select * from urlShort;
+select * from contUrl;
+
+create table contUrl(
+	"id" SERIAL primary key,
+	"urls" text not null,
+	"shortId" integer not null,
+	"cont" integer not null
+
+);
+
+select u.id , u."userId",  u2.id as "idImagem", u2."token"  from urlshort u 
+join users u2  on u."userId" = u2.id;
+
+SELECT contUrl."id", SUM(conturl."cont") as "VisitCount", conturl."urls", contUrl."shortId" FROM conturl GROUP BY conturl."urls", contUrl."shortId", contUrl."id" order by contUrl."id"; -- soma da quantidade de visitas do link
+
+SELECT r.name, SUM(conturl."cont") AS "VisitCount", conturl."shortId" AS "userId"
+FROM conturl
+JOIN register r ON r.id = conturl."shortId"
+where r.id =3
+GROUP BY conturl."shortId", r.name;
+
+
+SELECT r.name, SUM(conturl."cont") AS "VisitCountUser", conturl."shortId" AS "userId", contUrl."id", SUM(conturl."cont") as "VisitCountUrl", conturl."urls", contUrl."shortId"
+FROM conturl
+JOIN register r ON r.id = conturl."shortId"
+where r.id =2
+GROUP BY conturl."shortId", r.name, contUrl."id";
