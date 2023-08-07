@@ -16,7 +16,7 @@ export  async function listUsers (req, res){
         GROUP BY c."shortId", register.name, register.id;`,[id.rows[0].id])
 
         //INFORMAÇÕES DAS URLS
-        const infoUrl = await db.query(`SELECT u."id", SUM(u."visitCount")  AS "visitCount", u."shortUrl", u."url"
+        const infoUrl = await db.query(`SELECT u."id", u."shortUrl",  u."url", SUM(u."visitCount")  AS "visitCount"
         FROM urlshort u
         WHERE u."userId" =$1
         GROUP BY u."id",u."shortUrl", u."url"
