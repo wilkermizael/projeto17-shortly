@@ -12,7 +12,9 @@ export  async function urlShorten (req, res){
         //VALIDA O USERID
         const tokenDB = await db.query(`SELECT * FROM users WHERE token =$1;`,[token])
         if(tokenDB.rowCount === 0) return res.status(401).send('Unauthorized')
-        //ENVIANDO A URL PARA O BANCO DE DADOS
+        //ENVIANDO A URL PARA O BANCO DE DADOS CASO ELE AINDA NAO ESTEJA LA
+        const sendUrl = await db.query(`SELECT * FROM urlShort WHERE url = $1;`,[url])
+        if(sendUrl.rowCount !== 0) return res.status(401).send('Unauthorized')
         await db.query(`INSERT INTO urlShort ("shortUrl", url, "userId" ) VALUES ($1,$2, $3);`,[shortUrl, url, tokenDB.rows[0].id])
 
         const dataSend = await db.query(`SELECT * FROM urlShort WHERE "shortUrl" = $1;`,[shortUrl]);
@@ -55,9 +57,11 @@ export async function urlRedirect(req, res){
         
         //ADICIONA URL ENCURTADA NA TABELA RESPECTIVA
         //SE A URL JA FOI ADICIONADA, ADICIONA MAIS UM NA CONTAGEM
-        const findUrl = await db.query(`SELECT * FROM contUrl WHERE contUrl."urls" =$1`,[shortUrl])
+        const findUrl = await db.query(`SELECT * FROM urlShort WHERE "shortUrl" =$1`,[shortUrl])
+        
         if(findUrl.rowCount !== 0){
-            await db.query(`UPDATE contUrl SET cont = $1 WHERE urls =$2;`,[findUrl.rows[0].cont + 1, shortUrl])
+            console.log(findUrl.rows[0])
+            await db.query(`UPDATE urlShort SET "visitCount" = $1 WHERE "shortUrl"=$2;`,[findUrl.rows[0].visitCount + 1, shortUrl])
             return res.redirect(url.rows[0].url)
         }
 
