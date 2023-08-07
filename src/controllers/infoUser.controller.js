@@ -34,10 +34,10 @@ export  async function listUsers (req, res){
 export async function ranking( req,res){
     try{
         const ranking = await db.query(`
-        SELECT register.id, register.name, SUM(u."visitCount") as "visitCount", COUNT(u."userId") AS linksCount
+        SELECT register.id, register.name, SUM(u."visitCount") as "visitCount", COUNT(u."userId") AS "linksCount"
         FROM register
         LEFT JOIN urlshort u ON register.id = u."userId"
-        GROUP BY register.id, register.name
+        GROUP BY register.id, register.name , linksCount
         ORDER BY linksCount DESC
         LIMIT 10;
     `);
