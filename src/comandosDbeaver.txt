@@ -1,4 +1,4 @@
-drop table contUrl;
+drop table users  ;
 
 create table register(
 	"id" SERIAL primary key,
@@ -26,8 +26,8 @@ create  table urlShort(
 	"url" text not null,
 	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
 	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-	"visitCount" integer default 0,
-	"activ" BOOLEAN default true
+	"visitCount" integer not null default 0
+	
 );
 
 
@@ -40,8 +40,8 @@ create table contUrl(
 	"id" SERIAL primary key,
 	"urls" text not null,
 	"shortId" integer not null,
-	"cont" integer not null
-
+	"cont" integer not null default 1
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 select u.id , u."userId",  u2.id as "idImagem", u2."token"  from urlshort u 
@@ -49,15 +49,36 @@ join users u2  on u."userId" = u2.id;
 
 SELECT contUrl."id", SUM(conturl."cont") as "VisitCount", conturl."urls", contUrl."shortId" FROM conturl GROUP BY conturl."urls", contUrl."shortId", contUrl."id" order by contUrl."id"; -- soma da quantidade de visitas do link
 
-SELECT r.name, SUM(conturl."cont") AS "VisitCount", conturl."shortId" AS "userId"
+
+
+--- NOVA TENTATIVA DE AGRUPAR DE MANEIRA SEPARADA
+SELECT register.id, register.name,  SUM(u."visitCount") as "VisitCount" 
+FROM urlshort u 
+JOIN register ON register.id = "userId"
+WHERE u."userId" = 3
+GROUP BY u."userId", register.name, register.id;
+
+SELECT contUrl."id", SUM(conturl."cont") as "VisitCountUrl", conturl."urls" as "shortUrl",u."url"
 FROM conturl
 JOIN register r ON r.id = conturl."shortId"
+join urlshort u on u."shortUrl" = contUrl."urls" 
 where r.id =3
-GROUP BY conturl."shortId", r.name;
+GROUP by contUrl."id", u."url";
+
+--REFATORANDO A CONTAGEM DOS LINKS
+
+SELECT u."id", SUM(u."visitCount")  as "visitCount", u."shortUrl", u."url"
+FROM urlshort u
+where u."userId" =3
+GROUP by u."id",u."shortUrl", u."url"
+;
 
 
-SELECT r.name, SUM(conturl."cont") AS "VisitCountUser", conturl."shortId" AS "userId", contUrl."id", SUM(conturl."cont") as "VisitCountUrl", conturl."urls", contUrl."shortId"
-FROM conturl
-JOIN register r ON r.id = conturl."shortId"
-where r.id =2
-GROUP BY conturl."shortId", r.name, contUrl."id";
+select * from urlShort;
+
+---SELECIONANDO A QUANTIDADE DE LINKS POR ID
+
+SELECT register.id, register.name,  SUM(u."visitCount") as "VisitCount", COUNT(u."userId") as linksCount
+FROM urlshort u 
+JOIN register ON register.id = "userId"
+GROUP BY u."userId", register.name, register.id,linksCount;
