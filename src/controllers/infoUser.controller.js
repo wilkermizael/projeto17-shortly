@@ -9,10 +9,10 @@ export  async function listUsers (req, res){
         
         //INFORMAÇÕES DO USUARIO
         const infoUser = await db.query(`SELECT register.id, register.name,
-        SUM(conturl."cont") AS "visitCount"
-        FROM conturl
-        JOIN register ON register.id = conturl."shortId"
-        WHERE contUrl."shortId" = $1
+        SUM(c."cont") AS "visitCount"
+        FROM conturl c
+        JOIN register ON register.id = "shortId"
+        WHERE "shortId" = $1
         GROUP BY contUrl."shortId", register.name, register.id;`,[id.rows[0].id])
 
         //INFORMAÇÕES DAS URLS

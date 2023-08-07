@@ -65,8 +65,8 @@ export async function urlRedirect(req, res){
             return res.redirect(url.rows[0].url)
         }
 
-        await db.query(`INSERT INTO contUrl (urls, "shortId") VALUES ($1, $2);`,[shortUrl, url.rows[0].userId])
-        return res.redirect(url.rows[0].url)
+        /*await db.query(`INSERT INTO contUrl (urls, "shortId") VALUES ($1, $2);`,[shortUrl, url.rows[0].userId])
+        return res.redirect(url.rows[0].url)*/
     } catch (error) {
         res.status(500).send(error.message)
     }
