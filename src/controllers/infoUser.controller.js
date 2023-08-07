@@ -8,7 +8,7 @@ export  async function listUsers (req, res){
         if(id.rowCount === 0) return res.sendStatus(401)
         
         //INFORMAÇÕES DO USUARIO
-        const infoUser = await db.query(`SELECT register.id, register.name,  SUM(u."visitCount") as "VisitCount" 
+        const infoUser = await db.query(`SELECT register.id, register.name,  SUM(u."visitCount") as "visitCount" 
         FROM urlshort u 
         JOIN register ON register.id = "userId"
         WHERE u."userId" = $1
@@ -34,7 +34,7 @@ export  async function listUsers (req, res){
 export async function ranking( req,res){
     try{
         const ranking = await db.query(`
-        SELECT register.id, register.name, SUM(u."visitCount") as "VisitCount", COUNT(u."userId") as linksCount
+        SELECT register.id, register.name, SUM(u."visitCount") as "visitCount", COUNT(u."userId") as linksCount
         FROM register
         LEFT JOIN urlshort u ON register.id = u."userId"
         GROUP BY register.id, register.name
