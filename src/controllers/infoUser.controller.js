@@ -13,7 +13,7 @@ export  async function listUsers (req, res){
         FROM conturl c
         JOIN register ON register.id = "shortId"
         WHERE "shortId" = $1
-        GROUP BY contUrl."shortId", register.name, register.id;`,[id.rows[0].id])
+        GROUP BY c."shortId", register.name, register.id;`,[id.rows[0].id])
 
         //INFORMAÇÕES DAS URLS
         const infoUrl = await db.query(`SELECT u."id", SUM(u."visitCount")  AS "visitCount", u."shortUrl", u."url"
